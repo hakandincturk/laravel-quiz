@@ -24,5 +24,5 @@ You can start the localhost whit this code.
 
 ```sh
 $ php artisan serve
-$ yarn watch
+$ npm run watch
 ```
