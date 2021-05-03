@@ -8,10 +8,10 @@ use Illuminate\Support\Str;
 
 //REQUESTS
 use App\Http\Requests\QuestionCreateRequest;
+use App\Http\Requests\QuestionUpdateRequest;
 
 //MODELS
 use App\Models\Quiz;
-use App\Models\Question;
 
 class QuestionController extends Controller
 {
@@ -55,7 +55,7 @@ class QuestionController extends Controller
         }
         Quiz::find($id)->questions()->create($request->post());
 
-        return redirect()->route('questions.index', $id)->withSuccess('Soru başarıyla oluşturuldu.');
+        return redirect()->route('questions.index', $id)->withSuccess('Soru başarıyla güncellendi.');
     }
 
     /*
@@ -75,9 +75,10 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($quizId, $questionId)
     {
-        //
+        $question =  Quiz::find($quizId)->questions()->whereId($questionId)->first() ?? abort(404, 'Quiz veya soru bulunamadı.');
+        return view('admin.question.edit', compact('question'));
     }
 
     /*
@@ -87,9 +88,19 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(QuestionUpdateRequest $request, $quizId, $questionId)
     {
-        //
+        if ($request->hasFile('image')){
+            $fileName=Str::slug($request->question).'_'.date_timestamp_get(date_create()).'.'.$request->image->extension();
+            $fileNameWithUpload='uploads/'.$fileName;
+            $request->image->move(public_path('uploads'), $fileName);
+            $request->merge([
+                'image'=>$fileNameWithUpload
+            ]);
+        }
+        Quiz::find($quizId)->questions()->whereId($questionId)->first()->update($request->post());
+
+        return redirect()->route('questions.index', $quizId)->withSuccess('Soru başarıyla güncellendi.');
     }
 
     /*
