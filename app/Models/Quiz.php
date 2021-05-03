@@ -33,6 +33,7 @@ use DB;
  * @method static \Illuminate\Database\Eloquent\Builder|Quiz whereUpdatedAt($value)
  * @mixin \Eloquent
  */
+
 class Quiz extends Model
 {
     use HasFactory;

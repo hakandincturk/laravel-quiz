@@ -36,7 +36,17 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereUpdatedAt($value)
  * @mixin \Eloquent
  */
+
 class Question extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'question',
+        'image',
+        'answer1',
+        'answer2',
+        'answer3',
+        'answer4',
+        'correctAnswer',
+    ];
 }
