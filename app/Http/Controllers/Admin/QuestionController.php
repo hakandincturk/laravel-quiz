@@ -109,8 +109,9 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($quizId, $questionId)
     {
-        //
+        Quiz::find($quizId)->questions()->whereId($questionId)->delete();
+        return redirect()->route('questions.index', $quizId)->withSuccess('Soru başarıyla silindi.');
     }
 }
