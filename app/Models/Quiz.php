@@ -32,6 +32,10 @@ use Cviebrock\EloquentSluggable\Sluggable;
  * @method static \Illuminate\Database\Eloquent\Builder|Quiz whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Quiz whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $slug
+ * @method static \Illuminate\Database\Eloquent\Builder|Quiz findSimilarSlugs(string $attribute, array $config, string $slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|Quiz whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Quiz withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
  */
 
 class Quiz extends Model
@@ -46,8 +50,9 @@ class Quiz extends Model
         'finished_at',
         'slug',
     ];
-
+    protected $appends = ['details'];
     protected $dates=['finished_at'];
+
     public function getFinishedAtAttribute($date){
         return $date ? Carbon::parse($date) : null;
     }
@@ -63,6 +68,21 @@ class Quiz extends Model
             'slug' => [
                 'source' => 'title'
             ]
+        ];
+    }
+
+    public function myResult(){
+        return $this->hasOne('App\Models\Result', 'quizId', 'id')->where('userId', auth()->user()->id);
+    }
+
+    public function results(){
+        return $this->hasMany('App\Models\Result', 'quizId', 'id');
+    }
+
+    public function getDetailsAttribute(){
+        return [
+            'average' => $this->results() ,
+            'joinedCount' => null,
         ];
     }
 }

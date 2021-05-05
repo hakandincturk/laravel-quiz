@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Result;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 //MODELS
@@ -23,7 +22,7 @@ class MainController extends Controller
     }
 
     public function quizDetail($slug){
-        $quiz = Quiz::where('slug', $slug)->withCount('questions')->first() ?? abort(404, 'Quiz Bulunamadı.');
+        return $quiz = Quiz::where('slug', $slug)->with('myResult', 'results')->withCount('questions')->first() ?? abort(404, 'Quiz Bulunamadı.');
         return view('quizDetail', compact('quiz'));
     }
 

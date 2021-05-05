@@ -7,6 +7,18 @@
                     <div class="col-md-4">
                         <ul class="list-group">
                             <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Puan
+                                <span class="badge badge-primary badge-pill">{{$quiz->myResult->point}}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Doğru / Yanlış Sayısı
+                                <div class="float-right">
+                                    <span class="badge badge-success badge-pill">{{$quiz->myResult->correct}} Doğru</span>
+                                    <span class="badge badge-danger badge-pill">{{$quiz->myResult->wrong}} Yanlış</span>
+
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
                                 Soru Sayısı
                                 <span class="badge badge-secondary badge-pill">{{$quiz->questions_count}}</span>
                             </li>
