@@ -42,8 +42,9 @@ class Quiz extends Model
     protected $fillable = [
         'title',
         'description',
+        'status',
         'finished_at',
-        'slug'
+        'slug',
     ];
 
     protected $dates=['finished_at'];
@@ -56,10 +57,10 @@ class Quiz extends Model
         return $this->hasMany('App\Models\Question', 'quizId', 'id');
     }
 
-    public  function sluggable(): array
+    public function sluggable(): array
     {
         return [
-            'slug'=> [
+            'slug' => [
                 'source' => 'title'
             ]
         ];
