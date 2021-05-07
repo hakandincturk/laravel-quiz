@@ -49,4 +49,8 @@ class Question extends Model
         'answer4',
         'correctAnswer',
     ];
+
+    public function myAnswer(){
+        return $this->hasOne('App\Models\Answer', 'questionId', 'id')->where('userId', auth()->user()->id);
+    }
 }

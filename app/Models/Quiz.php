@@ -50,7 +50,7 @@ class Quiz extends Model
         'finished_at',
         'slug',
     ];
-    protected $appends = ['details'];
+    protected $appends = ['details', 'myRank'];
     protected $dates=['finished_at'];
 
     public function getFinishedAtAttribute($date){
@@ -70,7 +70,6 @@ class Quiz extends Model
             ]
         ];
     }
-
     public function myResult(){
         return $this->hasOne('App\Models\Result', 'quizId', 'id')->where('userId', auth()->user()->id);
     }
@@ -79,10 +78,30 @@ class Quiz extends Model
         return $this->hasMany('App\Models\Result', 'quizId', 'id');
     }
 
+    public function topTen(){
+        return $this->results()->orderByDesc('point')->take(10);
+    }
+
+    public function getMyRankAttribute(){
+        $rank =0;
+        foreach ($this->results()->orderByDesc('point')->get() as $result){
+            $rank+=1;
+            if (auth()->user()->id == $result->userId){
+                return $rank;
+            }
+        }
+    }
+
+    /**
+     * @return array|null
+     */
     public function getDetailsAttribute(){
-        return [
-            'average' => $this->results() ,
-            'joinedCount' => null,
-        ];
+        if($this->results()->count()>0){
+            return [
+                'average' => round($this->results()->get()->avg('point')),
+                'joinedCount' => $this->results()->count(),
+            ];
+        }
+        return null;
     }
 }
