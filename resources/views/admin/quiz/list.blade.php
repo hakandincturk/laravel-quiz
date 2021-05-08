@@ -13,7 +13,7 @@
                     <div class="col-md-2">
                         <select class="form-control" onchange="this.form.submit()" name="status">
                             <option value="">Durum Seçiniz</option>
-                            <option @if(request()->get('status') === 'publish') selected @endif value="publish">Aktif</option>
+                            <option @if(request()->get('status') === 'publish' ) selected @endif value="publish">Aktif</option>
                             <option @if(request()->get('status') === 'passive') selected @endif value="passive">Pasif</option>
                             <option @if(request()->get('status') === 'draft') selected @endif value="draft">Taslak</option>
                         </select>
@@ -43,7 +43,16 @@
                         <td>
                             @switch($quiz->status)
                                 @case('publish')
-                                    <span class="badge badge-success">Aktif</span>
+
+                                    @if(!$quiz->finished_at)
+                                        <span class="badge badge-success">Aktif</span>
+                                    @elseif($quiz->finished_at > now())
+                                        <span class="badge badge-success">Aktif</span>
+                                    @else
+                                        <span class="badge badge-secondary text-white">Tarihi Dolmuş</span>
+
+                                @endif
+
                                     @break
                                 @case('passive')
                                     <span class="badge badge-danger">Pasif</span>
@@ -57,7 +66,8 @@
                             <span title="{{$quiz->finished_at}}">{{$quiz->finished_at ? $quiz->finished_at->diffForHumans() : '-'}}</span>
                         </td>
                         <td>
-                          <a href="{{route('questions.index', $quiz->id)}}" class="btn btn-sm btn-warning" title="Sorular"><i class="fa fa-question"></i></a>
+                            <a href="{{route('quizzes.details', $quiz->id)}}" class="btn btn-sm btn-secondary" title="Sonuçlar"><i class="fa fa-info-circle"></i></a>
+                            <a href="{{route('questions.index', $quiz->id)}}" class="btn btn-sm btn-warning" title="Sorular"><i class="fa fa-question"></i></a>
                             <a href="{{route('quizzes.edit', $quiz->id)}}" class="btn btn-sm btn-primary" title="Güncelle"><i class="fa fa-pen"></i></a>
                             <a href="{{route('quizzes.destroy', $quiz->id)}}" class="btn btn-sm btn-danger" title="Sil"><i class="fa fa-times"></i></a>
                         </td>

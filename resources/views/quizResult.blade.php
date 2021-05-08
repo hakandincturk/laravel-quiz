@@ -2,7 +2,7 @@
     <x-slot name="header">{{$quiz->title}} Sonucu</x-slot>
     <div class="card">
         <div class="card-body">
-
+            <h3>Puan: {{$quiz->myResult->point}}</h3>
             <div class="alert bg-light">
                 Eğer doğru şıkkı işaretlediysen sadece yeşil ile yazılır.<br>
                 <span class="text-success font-weight-bold">Doğru olan şıklar bu şekilde görünür.</span><br>
@@ -19,7 +19,8 @@
                     @endif
                     <strong>#{{$loop->iteration}}</strong> {{$question->question}}
                     @if($question->image) <img src="{{asset($question->image)}}" style="width: 50%;" /> @endif
-
+                    <br>
+                    <small>Bu soruya <b>{{$question->truePercent}}</b> oranında doğru cevap verildi.</small>
                     <div class="form-check mt-2">
 
                         <label class="form-check-label

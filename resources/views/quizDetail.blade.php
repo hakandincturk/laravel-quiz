@@ -69,10 +69,11 @@
                     </div>
                 <div class="col-md-8">
                         {{$quiz->description}}
-                        @if(!$quiz->myResult)
-                            <a href="{{route('quiz.join', $quiz->slug)}}" class="btn btn-primary btn-block btn-sm mt-2">Quiz'e Katıl</a>
-                        @else
+
+                        @if($quiz->myResult)
                             <a href="{{route('quiz.join', $quiz->slug)}}" class="btn btn-warning btn-block btn-sm mt-2">Quiz'i Görüntüle</a>
+                        @elseif($quiz->finished_at > now())
+                            <a href="{{route('quiz.join', $quiz->slug)}}" class="btn btn-primary btn-block btn-sm mt-2">Quiz'e Katıl</a>
                         @endif
                     </div>
                 </div>

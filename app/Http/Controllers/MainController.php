@@ -12,12 +12,16 @@ use App\Models\Answer;
 class MainController extends Controller
 {
     public function dashboard(){
-        $quizzes = Quiz::where('status', 'publish')->withCount('questions')->paginate(5);
-        return view('dashboard', compact('quizzes'));
+        $quizzes = Quiz::where('status', 'publish')->where(function ($query){
+            $query->whereNull('finished_at')
+                  ->orWhere('finished_at', '>', now());
+        })->withCount('questions')->paginate(5);
+        $userResults = auth()->user()->results;
+        return view('dashboard', compact('quizzes', 'userResults'));
     }
 
     public function quiz($slug){
-        $quiz = Quiz::whereSlug($slug)->with('questions.myAnswer')->first() ?? abort(404, 'Quiz bulunumadı.');
+        $quiz = Quiz::whereSlug($slug)->with('questions.myAnswer', 'myResult')->first() ?? abort(404, 'Quiz bulunumadı.');
         if($quiz->myRank) return view('quizResult', compact('quiz'));
         return view('quiz', compact('quiz'));
     }

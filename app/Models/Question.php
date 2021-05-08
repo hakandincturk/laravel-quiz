@@ -50,7 +50,20 @@ class Question extends Model
         'correctAnswer',
     ];
 
+    protected $appends = ['TruePercent'];
+
     public function myAnswer(){
         return $this->hasOne('App\Models\Answer', 'questionId', 'id')->where('userId', auth()->user()->id);
+    }
+
+    public function answers(){
+        return $this->hasMany('App\Models\Answer', 'questionId', 'id');
+    }
+
+    public function getTruePercentAttribute(){
+        $answerCount =  $this->answers()->count();
+        $trueAnswer=$this->answers()->where('answer', $this->correctAnswer)->count();
+
+        return number_format(100*($trueAnswer/$answerCount), 1, ',', '.');
     }
 }
